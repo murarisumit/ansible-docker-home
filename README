@@ -1,1 +1,5 @@
-To crerate a 
+To create a docker container using ansible as provisioning tool.
+
+
+Just run `docker build -t image_tag_name .` to create docker image using ansible.
+
