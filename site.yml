@@ -1,0 +1,43 @@
+- hosts: all
+  vars:
+    myuser: sumit
+    packages:
+      - vim
+      - git
+      - bash-completion
+      - sudo
+      - virtualenvwrapper
+  tasks:
+
+  - name: Add the user "{{ myuser }}"
+    user:
+      name: "{{ myuser }}"
+      groups: sudo
+
+  - name: Install list of packages
+    apt:
+      name: "{{ item }}"
+      state: present
+    with_items: "{{ packages }}"
+
+  - name: Add sudoers file
+    template:
+      src: "templates/sudoers.j2"
+      dest: "/etc/sudoers.d/custom_sudoers"
+      mode: 0440
+      owner: "root"
+      group: "root"
+
+  - name: Clone dotfiles repo
+    git:
+      repo: https://github.com/murarisumit/dotfiles
+      dest: "/home/{{ myuser }}/dotfiles"
+
+  - name: Set bashrc file
+    template:
+      src: "templates/bashrc.j2"
+      dest: "/home/{{ myuser }}/.bashrc"
+      mode: 0644
+      owner: "{{ my_user }}"
+      group: "{{ my_user }}"
+
